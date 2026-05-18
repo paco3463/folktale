@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Folktale San Pedro | Official Links & Synth</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts for premium retro-rock and sans-serif typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --brand-red: #DE1400;
+        }
+
+        body {
+            background-color: #0b0202;
+            color: #ffffff;
+            font-family: 'Montserrat', sans-serif;
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3, .font-syne {
+            font-family: 'Syne', sans-serif;
+        }
+
+        /* Clean glowing effect on borders */
+        .clean-border {
+            border: 2px solid #ffffff;
+        }
+
+        /* Minimal high-contrast link styles */
+        .minimal-link {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            background: transparent;
+        }
+
+        .minimal-link:hover {
+            background-color: #ffffff;
+            color: var(--brand-red) !important;
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.6);
+            transform: translateY(-1px);
+        }
+
+        .minimal-link:hover svg {
+            fill: var(--brand-red) !important;
+            stroke: var(--brand-red) !important;
+        }
+
+        /* Custom minimal slider design */
+        input[type="range"] {
+            -webkit-appearance: none;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.3);
+            height: 4px;
+            outline: none;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: #ffffff;
+            cursor: pointer;
+            transition: transform 0.1s;
+        }
+
+        input[type="range"]::-webkit-slider-thumb:active {
+            transform: scale(1.3);
+        }
+
+        /* Toggle switches */
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 26px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(255, 255, 255, 0.2);
+            transition: .3s;
+            border-radius: 34px;
+            border: 2px solid #ffffff;
+        }
+
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 16px;
+            width: 16px;
+            left: 3px;
+            bottom: 3px;
+            background-color: #ffffff;
+            transition: .3s;
+            border-radius: 50%;
+        }
+
+        input:checked + .toggle-slider {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        input:checked + .toggle-slider:before {
+            transform: translateX(24px);
+        }
+
+        /* Visualizer Box */
+        #visualizer-canvas {
+            background-color: #1a0100;
+            border: 2px solid #ffffff;
+        }
+
+        /* Status LED pulse indicators */
+        .pulse-indicator {
+            width: 10px;
+            height: 10px;
+            background-color: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            display: inline-block;
+            border: 1px solid #ffffff;
+        }
+
+        .pulse-active {
+            background-color: #ffffff;
+            box-shadow: 0 0 10px #ffffff;
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+<div id="folktale-landing-root" class="relative overflow-hidden selection:bg-white selection:text-red-600">
+
+    <!-- RAW VIDEO HERO SECTION (No overlay, no floating logo images, no buttons) -->
+    <div class="relative w-full h-[55vh] md:h-[65vh] flex flex-col items-center justify-center overflow-hidden">
+        <div class="absolute inset-0 w-full h-full z-0 overflow-hidden">
+            <video class="absolute top-1/2 left-1/2 min-w-full min-h-full -translate-x-1/2 -translate-y-1/2 object-cover opacity-100" 
+                   autoplay loop muted playsinline onerror="this.style.display='none'">
+                <source src="http://folktalesanpedro.org/wp-content/uploads/2026/05/df.webm" type="video/webm">
+                <!-- Fallback solid brand color if path fails -->
+                <div class="absolute inset-0 bg-[#DE1400]"></div>
+            </video>
+        </div>
+    </div>
+
+    <!-- MAIN FLUSH SOLID RED CONTAINER -->
+    <div class="bg-[#DE1400] w-full py-12">
+
+        <!-- SOUND OSCILLATOR SECTION (Placed above the links, flush red background, white text) -->
+        <div id="synth-section" class="max-w-xl mx-auto px-4 mb-16">
+            <div class="text-white relative">
+                
+                <!-- Synth Header -->
+                <div class="flex items-center justify-between mb-6 pb-4 border-b border-white/30">
+                    <div>
+                        <h3 class="font-syne text-xl font-extrabold uppercase tracking-widest text-white">Wave Oscillator</h3>
+                        <p class="text-[10px] text-white/70 uppercase tracking-widest mt-0.5">SP-2026 Synth Tool</p>
+                    </div>
+                    
+                    <!-- Power Toggle -->
+                    <div class="flex items-center gap-3">
+                        <span id="synth-status-label" class="text-xs uppercase font-semibold tracking-wider text-white/80">OFF</span>
+                        <div class="pulse-indicator" id="status-indicator"></div>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="synth-power">
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Oscilloscope Screen -->
+                <div class="mb-6 relative">
+                    <canvas id="visualizer-canvas" class="w-full h-24 rounded-lg"></canvas>
+                    <div class="absolute bottom-2 right-2 text-[8px] uppercase tracking-wider text-white/50 bg-black/40 px-2 py-0.5 rounded select-none">
+                        Output Monitor
+                    </div>
+                </div>
+
+                <!-- Sliders Controls -->
+                <div class="grid grid-cols-1 gap-6 mb-6">
+                    <!-- Frequency Control -->
+                    <div>
+                        <div class="flex justify-between text-xs font-semibold uppercase tracking-wider mb-2">
+                            <span>Pitch Frequency</span>
+                            <span class="font-mono text-white" id="freq-val">440 Hz</span>
+                        </div>
+                        <input type="range" id="freq-slider" min="80" max="1100" value="440">
+                    </div>
+
+                    <!-- Volume Control -->
+                    <div>
+                        <div class="flex justify-between text-xs font-semibold uppercase tracking-wider mb-2">
+                            <span>Output Level</span>
+                            <span class="font-mono text-white" id="vol-val">30%</span>
+                        </div>
+                        <input type="range" id="vol-slider" min="0" max="100" value="30">
+                    </div>
+                </div>
+
+                <!-- Waveform Select Grid -->
+                <div class="mb-6">
+                    <span class="block text-xs font-semibold uppercase tracking-wider mb-2">Waveform Shape</span>
+                    <div class="grid grid-cols-4 gap-2">
+                        <button type="button" data-wave="sine" class="wave-btn py-2 text-xs uppercase font-bold border border-white rounded transition-all bg-white text-[#DE1400]">
+                            Sine
+                        </button>
+                        <button type="button" data-wave="square" class="wave-btn py-2 text-xs uppercase font-bold border border-white/50 hover:border-white rounded transition-all">
+                            Square
+                        </button>
+                        <button type="button" data-wave="sawtooth" class="wave-btn py-2 text-xs uppercase font-bold border border-white/50 hover:border-white rounded transition-all">
+                            Saw
+                        </button>
+                        <button type="button" data-wave="triangle" class="wave-btn py-2 text-xs uppercase font-bold border border-white/50 hover:border-white rounded transition-all">
+                            Tri
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Device Warning Box -->
+                <div class="border border-white/30 rounded-lg p-4 flex gap-3 items-start bg-black/10">
+                    <svg class="w-5 h-5 text-white shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+                    </svg>
+                    <div>
+                        <span class="block font-bold text-xs uppercase tracking-wider">Device Silent Mode Warning</span>
+                        <p class="text-xs text-white/85 mt-1 leading-relaxed">
+                            The wave simulator <strong class="text-white underline">won't play any sound</strong> if your device is set to silent mode or muted via your hardware switch. Please unmute your system before testing.
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- CLEAN MINIMAL LINK TREE SECTION -->
+        <div id="links-section" class="max-w-xl mx-auto px-4 pb-12">
+            <div class="text-center mb-8">
+                <h2 class="text-2xl font-extrabold uppercase tracking-wider text-white">Direct Connect Directory</h2>
+                <div class="w-12 h-[2px] bg-white mx-auto mt-2"></div>
+            </div>
+
+            <div class="flex flex-col gap-4">
+                
+                <!-- "WASTED" Music Video -->
+                <a href="https://linktw.in/RuzIMV" target="_blank" rel="noopener noreferrer"
+                   class="minimal-link clean-border flex items-center justify-between px-6 py-4 rounded-lg text-white font-semibold uppercase tracking-wider text-sm">
+                    <span class="flex items-center gap-3">
+                        <svg class="w-4 h-4 fill-white" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                        "WASTED" Music Video
+                    </span>
+                    <span class="text-[10px] tracking-widest opacity-85">WATCH →</span>
+                </a>
+
+                <!-- Follow on Spotify -->
+                <a href="https://open.spotify.com/artist/1bBn6PlJjhDNQ8NBAsKFUk?si=Q84-pOdGTemx_B-Vembl4A" target="_blank" rel="noopener noreferrer"
+                   class="minimal-link clean-border flex items-center justify-between px-6 py-4 rounded-lg text-white font-semibold uppercase tracking-wider text-sm">
+                    <span class="flex items-center gap-3">
+                        <svg class="w-4 h-4 fill-white" viewBox="0 0 24 24">
+                            <path d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm4.586 14.424c-.18.295-.565.387-.86.207-2.377-1.454-5.37-1.783-8.893-.982-.336.075-.668-.135-.744-.47-.075-.336.135-.668.47-.743 3.856-.88 7.15-.51 9.822 1.127.296.18.385.564.205.86zm1.224-2.72c-.227.367-.707.487-1.074.26-2.72-1.672-6.87-2.157-10.082-1.182-.413.125-.847-.107-.972-.52-.125-.413.108-.847.52-.972 3.674-1.114 8.24-.57 11.35 1.346.366.226.486.706.258 1.072zm.105-2.836C14.492 8.812 8.842 8.625 5.587 9.613c-.506.153-1.04-.137-1.193-.642-.153-.505.137-1.04.642-1.193 3.738-1.134 9.96-.92 14.004 1.48.455.27.604.856.334 1.31-.27.455-.856.604-1.31.334z"/>
+                        </svg>
+                        Follow on Spotify
+                    </span>
+                    <span class="text-[10px] tracking-widest opacity-85">LISTEN →</span>
+                </a>
+
+                <!-- Youtube -->
+                <a href="https://www.youtube.com/channel/UCn2v8OTGxPNKTdVqnLLm-_A" target="_blank" rel="noopener noreferrer"
+                   class="minimal-link clean-border flex items-center justify-between px-6 py-4 rounded-lg text-white font-semibold uppercase tracking-wider text-sm">
+                    <span class="flex items-center gap-3">
+                        <svg class="w-4 h-4 fill-white" viewBox="0 0 24 24"><path d="M23.498 6.163a3.003 3.003 0 0 0-2.11-2.11C19.517 3.545 12 3.545 12 3.545s-7.517 0-9.388.507a3.003 3.003 0 0 0-2.11 2.11C0 8.033 0 12 0 12s0 3.967.502 5.837a3.003 3.003 0 0 0 2.11 2.11c1.871.507 9.388.507 9.388.507s7.517 0 9.388-.507a3.003 3.003 0 0 0 2.11-2.11C24 15.967 24 12 24 12s0-3.967-.502-5.837zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+                        Youtube
+                    </span>
+                    <span class="text-[10px] tracking-widest opacity-85">SUBSCRIBE →</span>
+                </a>
+
+                <!-- TikTok -->
+                <a href="https://www.tiktok.com/@folktalesanpedro" target="_blank" rel="noopener noreferrer"
+                   class="minimal-link clean-border flex items-center justify-between px-6 py-4 rounded-lg text-white font-semibold uppercase tracking-wider text-sm">
+                    <span class="flex items-center gap-3">
+                        <svg class="w-4 h-4 fill-white" viewBox="0 0 24 24"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.17-2.89-.74-3.94-1.74-.22-.21-.43-.44-.61-.68-.02 1.93-.01 3.86-.02 5.79 0 1.9-.38 3.89-1.54 5.39-1.45 1.93-3.88 2.94-6.27 2.81-2.28-.07-4.63-1.11-5.74-3.17-1.3-2.31-.96-5.46.79-7.41 1.41-1.61 3.65-2.4 5.73-2.13v4.14c-1.04-.21-2.23.11-2.86 1.01-.68.91-.56 2.27.27 3.02.73.68 1.86.77 2.72.26.56-.34.89-.95.91-1.61.03-3.13.01-6.27.02-9.41.01-1.12.01-2.24.01-3.37z"/></svg>
+                        TikTok
+                    </span>
+                    <span class="text-[10px] tracking-widest opacity-85">FOLLOW →</span>
+                </a>
+
+                <!-- Instagram -->
+                <a href="https://www.instagram.com/folktalesanpedro/?hl=en" target="_blank" rel="noopener noreferrer"
+                   class="minimal-link clean-border flex items-center justify-between px-6 py-4 rounded-lg text-white font-semibold uppercase tracking-wider text-sm">
+                    <span class="flex items-center gap-3">
+                        <svg class="w-4 h-4 fill-white" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.051.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/></svg>
+                        Instagram
+                    </span>
+                    <span class="text-[10px] tracking-widest opacity-85">FOLLOW →</span>
+                </a>
+
+                <!-- !MERCH! -->
+                <a href="https://folktalesanpedro.org/buy-our-shit/" target="_blank" rel="noopener noreferrer"
+                   class="minimal-link clean-border flex items-center justify-between px-6 py-4 rounded-lg text-white font-semibold uppercase tracking-wider text-sm">
+                    <span class="flex items-center gap-3">
+                        <svg class="w-4 h-4 fill-white" viewBox="0 0 24 24"><path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49c.08-.14.12-.31.12-.48 0-.55-.45-1-1-1H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z"/></svg>
+                        !MERCH!
+                    </span>
+                    <span class="text-[10px] tracking-widest opacity-85">SHOP →</span>
+                </a>
+
+                <!-- EPK -->
+                <a href="https://folktalesanpedro.org/EPK/" target="_blank" rel="noopener noreferrer"
+                   class="minimal-link clean-border flex items-center justify-between px-6 py-4 rounded-lg text-white font-semibold uppercase tracking-wider text-sm">
+                    <span class="flex items-center gap-3">
+                        <svg class="w-4 h-4 fill-white" viewBox="0 0 24 24"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>
+                        EPK
+                    </span>
+                    <span class="text-[10px] tracking-widest opacity-85">PRESS →</span>
+                </a>
+
+                <!-- Website Home -->
+                <a href="https://folktalesanpedro.org/" target="_blank" rel="noopener noreferrer"
+                   class="minimal-link clean-border flex items-center justify-between px-6 py-4 rounded-lg text-white font-semibold uppercase tracking-wider text-sm">
+                    <span class="flex items-center gap-3">
+                        <svg class="w-4 h-4 fill-white" viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+                        Website Home
+                    </span>
+                    <span class="text-[10px] tracking-widest opacity-85">VISIT →</span>
+                </a>
+
+            </div>
+        </div>
+
+    </div>
+
+    <!-- LOWER VIDEO BANNER WITH HUGE HELVETICA BOLD TITLE -->
+    <div class="relative w-full overflow-hidden border-t-2 border-white bg-black">
+        <div class="relative w-full h-[350px] md:h-[550px] flex items-center justify-center">
+            
+            <!-- Video Background Container -->
+            <div class="absolute inset-0 w-full h-full z-0 overflow-hidden">
+                <video class="absolute top-1/2 left-1/2 min-w-full min-h-full -translate-x-1/2 -translate-y-1/2 object-cover opacity-90" 
+                       autoplay loop muted playsinline onerror="this.style.display='none'">
+                    <source src="http://folktalesanpedro.org/wp-content/uploads/2026/05/folktalesanpedro-footervideo.webm" type="video/webm">
+                </video>
+                <!-- Subtle contrast vignette -->
+                <div class="absolute inset-0 bg-black/25 z-10"></div>
+            </div>
+            
+            <!-- Panoramic Band Text overlay in heavy bold Helvetica -->
+            <div class="relative z-20 text-center w-full px-4 select-none">
+                <h2 class="text-white text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-black uppercase tracking-tight" 
+                    style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;">
+                    FOLKTALE SAN PEDRO
+                </h2>
+            </div>
+        </div>
+    </div>
+
+    <!-- MAIN BRAND FOOTER -->
+    <footer class="bg-black py-12 relative z-20 text-center border-t border-zinc-900">
+        <div class="max-w-xl mx-auto px-4 flex flex-col items-center">
+            <img class="w-36 h-auto opacity-60 mb-4 hover:opacity-100 transition duration-300 filter invert" 
+                 src="https://folktalesanpedro.org/wp-content/uploads/2024/09/wordart-1-1024x439-1-300x129.png" 
+                 alt="Folktale San Pedro Wordart Footer Logo">
+            <p class="text-[9px] text-zinc-500 font-mono tracking-widest">
+                &copy; 2026 FOLKTALE SAN PEDRO // DIRECT LINK HUB
+            </p>
+        </div>
+    </footer>
+</div>
+
+<!-- WEB AUDIO API & APP INTERACTIVITY SCRIPT -->
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        // Elements selector
+        const powerToggle = document.getElementById("synth-power");
+        const statusIndicator = document.getElementById("status-indicator");
+        const statusLabel = document.getElementById("synth-status-label");
+        const freqSlider = document.getElementById("freq-slider");
+        const freqVal = document.getElementById("freq-val");
+        const volSlider = document.getElementById("vol-slider");
+        const volVal = document.getElementById("vol-val");
+        const waveButtons = document.querySelectorAll(".wave-btn");
+        const canvas = document.getElementById("visualizer-canvas");
+        const canvasCtx = canvas.getContext("2d");
+
+        // Set up Web Audio Variables
+        let audioCtx = null;
+        let oscillator = null;
+        let gainNode = null;
+        let analyser = null;
+        let selectedWaveform = 'sine';
+        let isPowerOn = false;
+        let animationFrameId = null;
+
+        // Resize Canvas context dynamic size
+        function resizeCanvas() {
+            canvas.width = canvas.parentElement.clientWidth;
+            canvas.height = 96; // Fixed height in px
+        }
+        window.addEventListener("resize", resizeCanvas);
+        resizeCanvas();
+
+        // Wave visualizer drawing routine
+        function drawVisualizer() {
+            if (!analyser || !isPowerOn) {
+                // Draw a flat baseline when off
+                canvasCtx.fillStyle = "#1a0100";
+                canvasCtx.fillRect(0, 0, canvas.width, canvas.height);
+                canvasCtx.lineWidth = 2;
+                canvasCtx.strokeStyle = "rgba(255, 255, 255, 0.15)";
+                canvasCtx.beginPath();
+                canvasCtx.moveTo(0, canvas.height / 2);
+                canvasCtx.lineTo(canvas.width, canvas.height / 2);
+                canvasCtx.stroke();
+                animationFrameId = requestAnimationFrame(drawVisualizer);
+                return;
+            }
+
+            animationFrameId = requestAnimationFrame(drawVisualizer);
+
+            const bufferLength = analyser.frequencyBinCount;
+            const dataArray = new Uint8Array(bufferLength);
+            analyser.getByteTimeDomainData(dataArray);
+
+            canvasCtx.fillStyle = "#1a0100";
+            canvasCtx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // Subtly draw background grid lines
+            canvasCtx.strokeStyle = "rgba(255, 255, 255, 0.05)";
+            canvasCtx.lineWidth = 1;
+            for(let i = 0; i < canvas.width; i += 25) {
+                canvasCtx.beginPath();
+                canvasCtx.moveTo(i, 0);
+                canvasCtx.lineTo(i, canvas.height);
+                canvasCtx.stroke();
+            }
+
+            // Draw clean white oscilloscope line path
+            canvasCtx.lineWidth = 2.5;
+            canvasCtx.strokeStyle = "#ffffff";
+            canvasCtx.shadowBlur = 6;
+            canvasCtx.shadowColor = "#ffffff";
+            canvasCtx.beginPath();
+
+            const sliceWidth = canvas.width * 1.0 / bufferLength;
+            let x = 0;
+
+            for (let i = 0; i < bufferLength; i++) {
+                const v = dataArray[i] / 128.0;
+                const y = v * canvas.height / 2;
+
+                if (i === 0) {
+                    canvasCtx.moveTo(x, y);
+                } else {
+                    canvasCtx.lineTo(x, y);
+                }
+
+                x += sliceWidth;
+            }
+
+            canvasCtx.lineTo(canvas.width, canvas.height / 2);
+            canvasCtx.stroke();
+            canvasCtx.shadowBlur = 0; // Reset shadow glow
+        }
+
+        // Start Oscillator Audio Setup
+        function initAudio() {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+
+            // Create nodes
+            oscillator = audioCtx.createOscillator();
+            gainNode = audioCtx.createGain();
+            analyser = audioCtx.createAnalyser();
+
+            // Configure Analyser
+            analyser.fftSize = 1024;
+
+            // Frequency and Wave shape values
+            oscillator.type = selectedWaveform;
+            oscillator.frequency.setValueAtTime(parseFloat(freqSlider.value), audioCtx.currentTime);
+
+            // Soft start volume level ramping
+            const targetVolume = (parseFloat(volSlider.value) / 100) * 0.12; // Master safe limit multiplier
+            gainNode.gain.setValueAtTime(0, audioCtx.currentTime);
+            gainNode.gain.linearRampToValueAtTime(targetVolume, audioCtx.currentTime + 0.05);
+
+            // Audio Signal Routing Path
+            oscillator.connect(gainNode);
+            gainNode.connect(analyser);
+            analyser.connect(audioCtx.destination);
+
+            oscillator.start();
+        }
+
+        // Clean termination of running audio nodes
+        function stopAudio() {
+            if (oscillator) {
+                try {
+                    if (gainNode) {
+                        gainNode.gain.cancelScheduledValues(audioCtx.currentTime);
+                        gainNode.gain.setValueAtTime(gainNode.gain.value, audioCtx.currentTime);
+                        gainNode.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 0.04);
+                    }
+                    setTimeout(() => {
+                        if (oscillator) {
+                            oscillator.stop();
+                            oscillator.disconnect();
+                            oscillator = null;
+                        }
+                    }, 50);
+                } catch(e) {
+                    console.warn("Synth state audio handling warning: ", e);
+                }
+            }
+        }
+
+        // Power toggle event handling
+        powerToggle.addEventListener("change", (e) => {
+            isPowerOn = e.target.checked;
+            if (isPowerOn) {
+                statusIndicator.classList.add("pulse-active");
+                statusLabel.textContent = "ON";
+                initAudio();
+            } else {
+                statusIndicator.classList.remove("pulse-active");
+                statusLabel.textContent = "OFF";
+                stopAudio();
+            }
+        });
+
+        // Sliding Frequency dynamic sweep control
+        freqSlider.addEventListener("input", (e) => {
+            const hz = e.target.value;
+            freqVal.textContent = hz + " Hz";
+            if (oscillator && isPowerOn) {
+                oscillator.frequency.linearRampToValueAtTime(parseFloat(hz), audioCtx ? audioCtx.currentTime + 0.01 : 0);
+            }
+        });
+
+        // Sliding Volume Control
+        volSlider.addEventListener("input", (e) => {
+            const percentage = e.target.value;
+            volVal.textContent = percentage + "%";
+            if (gainNode && isPowerOn) {
+                const targetVolume = (parseFloat(percentage) / 100) * 0.12; // Scaled safe master volume limit
+                gainNode.gain.linearRampToValueAtTime(targetVolume, audioCtx ? audioCtx.currentTime + 0.01 : 0);
+            }
+        });
+
+        // Waveform shape selector buttons handling
+        waveButtons.forEach(btn => {
+            btn.addEventListener("click", () => {
+                // Set active buttons style class
+                waveButtons.forEach(b => {
+                    b.classList.remove("bg-white", "text-[#DE1400]");
+                    b.classList.add("border-white/50");
+                });
+                btn.classList.add("bg-white", "text-[#DE1400]");
+                btn.classList.remove("border-white/50");
+
+                // Apply selected wave shape
+                selectedWaveform = btn.getAttribute("data-wave");
+                if (oscillator && isPowerOn) {
+                    oscillator.type = selectedWaveform;
+                }
+            });
+        });
+
+        // Launch constant visualization paint loop
+        drawVisualizer();
+    });
+</script>
+
+</body>
+</html>
